@@ -1,0 +1,32 @@
+[
+  {
+    "scenario": "Equity sell-off",
+    "asset_return_shocks": {
+      "GLD": 0.03,
+      "IEF": 0.02,
+      "^FTSE": -0.15,
+      "^GSPC": -0.2
+    },
+    "portfolio_return": -0.075
+  },
+  {
+    "scenario": "Rates and inflation shock",
+    "asset_return_shocks": {
+      "GLD": -0.05,
+      "IEF": -0.08,
+      "^FTSE": -0.1,
+      "^GSPC": -0.12
+    },
+    "portfolio_return": -0.0875
+  },
+  {
+    "scenario": "Broad liquidation",
+    "asset_return_shocks": {
+      "GLD": -0.1,
+      "IEF": -0.04,
+      "^FTSE": -0.18,
+      "^GSPC": -0.2
+    },
+    "portfolio_return": -0.13
+  }
+]

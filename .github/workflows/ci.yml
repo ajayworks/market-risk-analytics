@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies
+        # yfinance is deliberately omitted: only fetch_data.py imports it, so the
+        # analysis and its tests must run without it.
+        run: python -m pip install numpy==2.4.0 pandas==2.3.3 scipy==1.16.3 matplotlib==3.10.8
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+  dependency-resolution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the full pinned environment
+        run: python -m pip install -r requirements.txt
+      - name: Verify every declared import resolves
+        run: python -c "import numpy, pandas, scipy, matplotlib, yfinance; print('imports ok')"
