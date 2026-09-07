@@ -39,7 +39,7 @@ This replaces the original notebook's in-sample PASS labels with a chronological
 
 ## Reproducibility
 
-The coverage results and Monte Carlo estimates reproduce **bit-identically** on numpy 2.2.6 / Python 3.10 / Linux and numpy 2.4.0 / Python 3.12 / macOS. `results/run_manifest.json` records the input SHA-256, the Python version and the installed library versions of the run that produced the published figures.
+The coverage results reproduce **byte-identically** on a second environment — Linux / Python 3.10 / NumPy 2.2.6 against macOS / Python 3.12 / NumPy 2.4.0. Both manifests and the reproduced coverage table are committed under [results/reproduction/](results/reproduction/) so the comparison can be checked rather than taken on trust. Monte Carlo estimates agree to fifteen significant figures, differing in the final bits at the 95% level through floating-point summation order in the portfolio aggregation; they are descriptive and excluded from the forecast evaluation. `results/run_manifest.json` records the input SHA-256, the Python version and the installed library versions of the run that produced the published figures.
 
 Monte Carlo draws use an explicit Cholesky decomposition. NumPy's default multivariate-normal method is SVD, whose singular vectors are defined only up to sign, so two correct LAPACK builds return different decompositions and the same seed produces different draws. Monte Carlo values published before this change were not reproducible across environments; the coverage results always were.
 

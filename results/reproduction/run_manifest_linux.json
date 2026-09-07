@@ -1,0 +1,44 @@
+{
+  "input_sha256": "abde20ee7d62e0a2c600cb680fc334bfe3cd5e0a06f20e415a8e5fbeeeef0d0a",
+  "python_version": "3.10.12",
+  "library_versions": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scipy": "1.15.3",
+    "matplotlib": "3.10.9"
+  },
+  "start": "2019-01-03",
+  "end": "2026-03-05",
+  "return_observations": 1767,
+  "assets": [
+    "GLD",
+    "IEF",
+    "^FTSE",
+    "^GSPC"
+  ],
+  "weights": [
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "window": 250,
+  "seed": 42,
+  "forecast_horizon": "next aligned return observation",
+  "annualisation_factor": 252,
+  "full_sample_annualised_portfolio_volatility": 0.09451762399174962,
+  "monte_carlo": {
+    "scenarios": 10000,
+    "scope": "full-sample descriptive estimate, not a backtest",
+    "results": {
+      "0.95": {
+        "var": 0.009250798672132153,
+        "es": 0.011606781689725358
+      },
+      "0.99": {
+        "var": 0.013206988284364271,
+        "es": 0.015017720608509075
+      }
+    }
+  }
+}
