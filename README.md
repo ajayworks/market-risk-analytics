@@ -1,5 +1,7 @@
 # Market Risk Analytics: Forecasts, Coverage & Stress
 
+[![tests](https://github.com/ajayworks/market-risk-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/ajayworks/market-risk-analytics/actions/workflows/ci.yml)
+
 A Python portfolio-risk study that compares historical and Gaussian VaR forecasts using only previously observed returns, quantifies Expected Shortfall, and tests not just how often the models fail but **when**.
 
 **Start here:** [results and chart](results/RESULTS.md) · [forecast code](risk.py) · [regression tests](tests/test_risk.py).
