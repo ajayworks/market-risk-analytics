@@ -120,6 +120,16 @@ def format_p_value(value):
     """A p-value of 4e-09 printed as 0.000000 reads as exactly zero. It is not."""
     return f"{value:.4f}" if value >= 1e-4 else f"{value:.1e}"
 
+def conditional_coverage(unconditional, independence):
+    """Kupiec and Christoffersen likelihood ratios are additive; chi-squared, 2 df.
+
+    Defined once here so the CLI and the Streamlit interface cannot drift apart.
+    """
+    lr = unconditional["kupiec_lr"] + independence["christoffersen_ind_lr"]
+    return {"conditional_coverage_lr": lr,
+            "conditional_coverage_p_value": float(chi2.sf(lr, 2))}
+
+
 def risk_contributions(frame, weights):
     covariance = frame.cov().to_numpy()*252
     vol = float(np.sqrt(weights @ covariance @ weights))
@@ -153,11 +163,9 @@ def run(data_path, output, window=250, seed=42):
         unconditional = coverage_test(group.breach, confidence)
         independence = independence_test(group.breach)
         # Conditional coverage: the two likelihood ratios are additive, chi-squared with 2 df.
-        cc_lr = unconditional["kupiec_lr"] + independence["christoffersen_ind_lr"]
         summaries.append({"method": method, "confidence": confidence,
                           **unconditional, **independence,
-                          "conditional_coverage_lr": cc_lr,
-                          "conditional_coverage_p_value": float(chi2.sf(cc_lr, 2))})
+                          **conditional_coverage(unconditional, independence)})
     contributions, vol = risk_contributions(frame, weights)
     rng = np.random.default_rng(seed)
     # method="cholesky" is deterministic across LAPACK builds. The default "svd" is not:
