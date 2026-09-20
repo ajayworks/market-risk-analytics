@@ -4,7 +4,7 @@
 
 A Python portfolio-risk study that compares historical and Gaussian VaR forecasts using only previously observed returns, quantifies Expected Shortfall, and tests not just how often the models fail but **when**.
 
-**Start here:** [results and chart](results/RESULTS.md) · [forecast code](risk.py) · [regression tests](tests/test_risk.py).
+**Start here:** [live app](https://market-risk-backtesting.streamlit.app) · [results and chart](results/RESULTS.md) · [forecast code](risk.py) · [regression tests](tests/test_risk.py).
 
 ## Main finding
 
@@ -64,6 +64,29 @@ python risk.py --data data/raw/refreshed_returns.csv --output results/refreshed
 ```
 
 Input is a CSV with a date column first and numeric simple-return columns, with strictly increasing unique dates and no missing values. Defaults are equal long-only weights; changing the asset set disables the four-asset-specific stress scenarios.
+
+## Browser interface
+
+**[market-risk-backtesting.streamlit.app](https://market-risk-backtesting.streamlit.app)** — free hosting, so the app sleeps after a spell without visitors and takes about half a minute to wake.
+
+`app.py` is a Streamlit interface over the same functions in `risk.py` that the regression tests cover. It recomputes nothing of its own, so the browser and the command line cannot drift apart and report different numbers for the same input. It takes either an uploaded return CSV or a simulated series generated from a GARCH-like process, and both paths go through `load_returns`, so the demonstration cannot bypass a validation check that real data has to pass.
+
+**The simulated series is a demonstration and is not evidence about any market.** The figures above come from the dataset described under [data provenance](data/raw/README.md).
+
+Locally:
+
+```bash
+python -m streamlit run app.py
+```
+
+In a container:
+
+```bash
+docker build -t market-risk-analytics .
+docker run -p 8080:8080 market-risk-analytics
+```
+
+The image installs the pinned `requirements.txt`, copies only `risk.py` and `app.py`, runs as a non-root user and serves Streamlit on port 8080.
 
 ## Method
 
