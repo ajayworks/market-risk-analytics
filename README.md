@@ -88,6 +88,23 @@ docker run -p 8080:8080 market-risk-analytics
 
 The image installs the pinned `requirements.txt`, copies only `risk.py` and `app.py`, runs as a non-root user and serves Streamlit on port 8080.
 
+## Deployment
+
+The container in the section above is what runs on AWS. On an EC2 instance (Amazon Linux 2023, t3.micro, eu-west-2) the image is built from this repository and started as a background service:
+
+```bash
+sudo docker build -t market-risk-analytics .
+sudo docker run -d --restart unless-stopped -p 80:8080 --name market-risk market-risk-analytics
+```
+
+`--restart unless-stopped` brings the container back after a crash or an instance reboot; the `HEALTHCHECK` in the `Dockerfile` polls Streamlit's own `/_stcore/health` endpoint, so `docker ps` reports whether the application inside is alive rather than merely whether the process exists.
+
+![Streamlit interface served from AWS EC2](results/aws_deployment.png)
+
+Recorded 21 September 2026 at `http://35.178.195.140`. Two honest notes on that screenshot. The instance runs on a time-limited AWS account, so the address will stop resolving; this screenshot and description are the durable record, and [market-risk-backtesting.streamlit.app](https://market-risk-backtesting.streamlit.app) is the permanent link. And it is served over plain HTTP — no TLS certificate was configured for a demonstration deployment, which is why the browser marks it *Not Secure*.
+
+The figures are identical, to every digit displayed, across local macOS (NumPy 1.26.4), Streamlit Community Cloud and the EC2 container (both Python 3.12 / NumPy 2.4.0): 1,250 forecasts per model and 90, 28, 98 and 31 breaches. That is a consequence of the design rather than a coincidence — the interface carries no arithmetic of its own, so every environment is running the same tested functions in `risk.py`.
+
 ## Method
 
 At each forecast date t, estimate VaR and ES from observations t-250 through t-1. A breach occurs when realised loss (-return) exceeds the forecast VaR. Historical ES is the empirical mean of sample losses at or above the interpolated VaR threshold. Gaussian ES uses the normal tail expectation. Full-sample descriptive calculations are never used in these forecasts.
